@@ -3,6 +3,7 @@
 #include <bits/stdc++.h>
 
 using namespace std;
+#if 0
 bool is_match (string A, string B){
 
   size_t lengthA = A.length();
@@ -25,7 +26,7 @@ bool is_match (string A, string B){
   //if A i empty, B[0] doesn't have '*'
   if (A.length() ==0 && B.length() ==1 && B[0]!='*')
     return false; 
- 
+
   //iterate over all elements in the string
   for (size_t i=0; i<lengthA; i++){
 
@@ -42,18 +43,18 @@ bool is_match (string A, string B){
     //if B='*"
     if(B[j]=='*'){
        //*find the next B element that is not *
-       while (j<(lengthB-1)&&(B[j]=='*')){
+			 while (j<(lengthB-1)&&(B[j]=='*')){
          j++;
        }
 
        //if this is the last element in B and it is '*' we can return true
-       if (j==(lengthB-1)) return true;
+       if (j==(lengthB-1)&& B[j]=='*') return true;
 
        //the next non '*' element in B is the same as the one in A 
-       //( * corresponds to em[ty char )
-       
+       //( * corresponds to empty char )
+    
        if (B[j]==A[i]){
-         j=j+1;
+         j++;
          continue;
        }
        else {
@@ -72,18 +73,87 @@ bool is_match (string A, string B){
       }//if
     }
   }//for
-
-  //we should never come here
-  return false;
 }
+
+#else
+
+ 
+vector<vector<int>> match;
+
+ bool is_match (string &A, string &B, int lengthA, int lengthB){
+   //if  lengthA==0 && lengthB==0
+   if (lengthA<0&&lengthB<0) return true;
+
+   if(lengthB<0) return false;
+
+   if (lengthA<0){
+      int i =lengthB;
+      while (i>0){
+        if (B[i]!='*') return false;
+        i--;
+      }
+      return true;
+   }
+
+   //check if we already visited this match 
+   if (match[lengthA][lengthB]==-1){
+#if 1
+      //if A and B has the same value
+      if (A[lengthA]==B[lengthB])
+				return match[lengthA][lengthB]=
+					is_match(A, B, lengthA-1, lengthB-1);     
+      
+      if (A[lengthA]!=B[lengthB] && B[lengthB]!='*')
+					return match[lengthA][lengthB]=false;
+
+      if (A[lengthA]!=B[lengthB] && B[lengthB]=='*')
+          return match[lengthA][lengthB]= is_match(A, B, lengthA-1, lengthB)||
+            is_match(A, B, lengthA, lengthB-1);
+#else
+      if (B[lengthB]=='*')
+        return match[lengthA][lengthB]= is_match(A, B, lengthA-1, lengthB)||
+            is_match(A, B, lengthA, lengthB-1);
+
+       if (A[lengthA]!=B[lengthB]) return  match[lengthA][lengthB]=false;
+       else
+          return match[lengthA][lengthB]= is_match(A, B, lengthA-1, lengthB)||
+            is_match(A, B, lengthA, lengthB-1);
+#endif      
+   }
+
+   //if it was visited already
+   return match[lengthA][lengthB];   
+ }
+
+ bool is_match (string A, string B){
+  size_t lengthA = A.length();
+  size_t lengthB =B.length();
+
+  match.clear();
+     
+  match.resize (lengthA+1);
+  for (size_t i=0; i<= lengthA; i++){
+    match[i].resize(lengthB+1);
+    for (size_t j=0; j<=lengthB; j++)
+      match[i][j]=-1;
+  }
+
+  std::cout <<match[lengthA-1][lengthB-1]<<endl;
+
+  return match[lengthA][lengthB]=is_match(A, B, lengthA-1, lengthB-1); 
+
+ }
+
+#endif
 
 int main()
 {
-    string str = "baaabab";
-    string pattern = "*****ba*****ab";
-    // char pattern[] = "ba*****ab";
-    // char pattern[] = "ba*ab";
-    // char pattern[] = "a*ab";
+    string str = "abradacabra";
+    string pattern = "ab*cd*abra";
+    //string pattern = "*****ba*****ab";
+    //string  pattern = "ba*****ab";
+    //string pattern = "ba*ab";
+    //string pattern = "a*ab";
     // char pattern[] = "a*****ab";
     // char pattern[] = "*a*****ab";
     // char pattern[] = "ba*ab****";
