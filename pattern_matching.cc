@@ -41,17 +41,23 @@ bool is_match (string A, string B){
 
     //if B='*"
     if(B[j]=='*'){
+       //*find the next B element that is not *
+       while (j<(lengthB-1)&&(B[j]=='*')){
+         j++;
+       }
+
        //if this is the last element in B and it is '*' we can return true
        if (j==(lengthB-1)) return true;
 
-       //the next element in B is the same as the one in A ( * corresponds to em[ty char
-       if (B[j+1]==A[i]){
-         j=j+2;
+       //the next non '*' element in B is the same as the one in A 
+       //( * corresponds to em[ty char )
+       
+       if (B[j]==A[i]){
+         j=j+1;
          continue;
        }
        else {
          //look at the next B element
-         j++;
          char b= B[j];
          while ((i<lengthA) && (A[i]!=b)){
            i++;
