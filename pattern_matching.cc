@@ -97,7 +97,6 @@ vector<vector<int>> match;
 
    //check if we already visited this match 
    if (match[lengthA][lengthB]==-1){
-#if 1
       //if A and B has the same value
       if (A[lengthA]==B[lengthB])
 				return match[lengthA][lengthB]=
@@ -109,16 +108,6 @@ vector<vector<int>> match;
       if (A[lengthA]!=B[lengthB] && B[lengthB]=='*')
           return match[lengthA][lengthB]= is_match(A, B, lengthA-1, lengthB)||
             is_match(A, B, lengthA, lengthB-1);
-#else
-      if (B[lengthB]=='*')
-        return match[lengthA][lengthB]= is_match(A, B, lengthA-1, lengthB)||
-            is_match(A, B, lengthA, lengthB-1);
-
-       if (A[lengthA]!=B[lengthB]) return  match[lengthA][lengthB]=false;
-       else
-          return match[lengthA][lengthB]= is_match(A, B, lengthA-1, lengthB)||
-            is_match(A, B, lengthA, lengthB-1);
-#endif      
    }
 
    //if it was visited already
@@ -150,21 +139,6 @@ int main()
 {
     string str = "abradacabra";
     string pattern = "ab*cd*abra";
-    //string pattern = "*****ba*****ab";
-    //string  pattern = "ba*****ab";
-    //string pattern = "ba*ab";
-    //string pattern = "a*ab";
-    // char pattern[] = "a*****ab";
-    // char pattern[] = "*a*****ab";
-    // char pattern[] = "ba*ab****";
-    // char pattern[] = "****";
-    // char pattern[] = "*";
-    // char pattern[] = "aa?ab";
-    // char pattern[] = "b*b";
-    // char pattern[] = "a*a";
-    // char pattern[] = "baaabab";
-    // char pattern[] = "?baaabab";
-    // char pattern[] = "*baaaba*";
  
     if ( is_match(str, pattern))
         cout << "Yes" << endl;
